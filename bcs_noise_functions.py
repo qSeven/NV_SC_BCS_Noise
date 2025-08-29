@@ -74,7 +74,7 @@ def coherence_factor(k_tilde, kmq_tilde, gap, Ef):
 
     return (uk*ukmq+vk*vkmq)**2
 
-def density_factor(Ek, hbar_omega, beta):
+def bcs_transition_density(Ek, hbar_omega, beta):
     """Density factor for transitions between quasi-particle states."""
     return nf(Ek, beta) * (1 - nf(Ek + hbar_omega, beta)) + \
            (1 - nf(Ek, beta)) * nf(Ek + hbar_omega, beta)
@@ -85,7 +85,7 @@ def kinetic_constraint(q_tilde, k_tilde, sq, Ek, hbar_omega, gap, Ef):
     kmq_tilde_sqrd = k_tilde**2 + q_tilde**2 - 2*k_tilde*q_tilde*cos_theta_kmq
     return (cos_theta_kmq, kmq_tilde_sqrd)
 
-def DOSA_vfq(k_tilde, costheta_qk, Ekmq, gap):
+def density_of_scattering_angles(k_tilde, costheta_qk, Ekmq, gap):
     """Density of scattering angles (DOSA)."""
     if costheta_qk**2<1:
         DOSAvfq = Ekmq/np.sqrt(Ekmq**2-gap**2)/k_tilde*np.sqrt(1-costheta_qk**2)
@@ -93,7 +93,7 @@ def DOSA_vfq(k_tilde, costheta_qk, Ekmq, gap):
         DOSAvfq = 0
     return DOSAvfq
 
-def HSintegrand(Ek, q_tilde, hbar_omega, gap, kbT, Ef):
+def current_r1_enhancement_integrand(Ek, q_tilde, hbar_omega, gap, kbT, Ef):
     """Integrand for current noise enhancement."""
     result = 0
     for sk in [-1,1]:
@@ -101,24 +101,15 @@ def HSintegrand(Ek, q_tilde, hbar_omega, gap, kbT, Ef):
             k_tilde = np.sqrt(1+sk/Ef*np.sqrt(Ek**2-gap**2))
             (cos_theta_kmq, kmq_tilde) = kinetic_constraint(q_tilde,k_tilde,sq, Ek, hbar_omega, gap, Ef)
             Ekmq = Ek+hbar_omega
-            DOSAvfq = DOSA_vfq(k_tilde, cos_theta_kmq, Ekmq, gap)
+            DOSAvfq = density_of_scattering_angles(k_tilde, cos_theta_kmq, Ekmq, gap)
             cf = coherence_factor(k_tilde, kmq_tilde, gap, Ef)
             if cos_theta_kmq <= 1:
-                result += DOSAvfq*Ek/np.sqrt(Ek**2-gap**2)*cf*density_factor(Ek, hbar_omega, 1/kbT)
+                result += DOSAvfq*Ek/np.sqrt(Ek**2-gap**2)*cf*bcs_transition_density(Ek, hbar_omega, 1/kbT)
     return result 
-
-def weights(Ek, sk, sq, q_tilde, hbar_omega, gap, Ef):
-    """Return quasi-particle weights and print intermediate values for debugging."""
-    k_tilde = np.sqrt(1+sk/Ef*np.sqrt(Ek**2-gap**2))
-    (cos_theta_kmq, kmq_tilde) = kinetic_constraint(q_tilde,k_tilde,sq, Ek, hbar_omega, gap, Ef)
-    print("test:")
-    print(np.sqrt((kmq_tilde**2*Ef-Ef)**2+gap**2))
-    print(cos_theta_kmq)
-    return ukvks(k_tilde, kmq_tilde, gap, Ef)
 
 def current_noise_enhancement(q_tilde, hbar_omega, gap, kbT, Ef):
     """Enhancement of current noise relative to normal metal."""
-    result, _ = quad(HSintegrand, gap , np.inf, args=(q_tilde, hbar_omega, gap, kbT, Ef), epsabs=1e-12, epsrel=1e-12)
+    result, _ = quad(current_r1_enhancement_integrand, gap , np.inf, args=(q_tilde, hbar_omega, gap, kbT, Ef), epsabs=1e-12, epsrel=1e-12)
     return result * 1/kbT/2
 
 def rate_enhancement(d, qs, RJs):
