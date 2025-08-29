@@ -5,7 +5,7 @@ This script calculates the enhancement of current noise J(q, omega)
 due to a superconducting film as a function of temperature for
 various NV frequencies (omega). It reads the superconducting gap as a
 function of temperature from a CSV file, computes the current noise enhancement
-for a fixed wavevector q and a range of temperatures, and saves
+for a fixed wavevector q and a range of temperatures and frequencies, and saves
  the results to a csv file.
 """
 import csv
