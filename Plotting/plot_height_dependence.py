@@ -17,6 +17,10 @@ plt.rcParams['lines.linewidth'] = 0.9
 #plt.rcParams["figure.figsize"] = (3.375*1.5, 3.375/2*1.5)
 plt.rc('legend',fontsize=8)
 
+# Colors
+color = np.roll(["#746198", "#4781a7", "#589a5d", "#b3af38", "#b27d58", "#a75051"], 1)
+mpl.rcParams['axes.prop_cycle'] = cycler.cycler('color', color)
+
 # Data Paramters
 HOME_FOLDER = ('/Users/shanekelly/Documents/Academic/Projects/Superconducting Experiment /'
                'NV_SC_BCS_Noise')
@@ -26,16 +30,12 @@ FIG_LOCATION = HOME_FOLDER+'/Results/height_dependence.pdf'
 FINITET_GAP    = 11  # kelvin
 FERMI_ENERGY   = 61700  # kelvin
 FERMI_MOMENTUM = 1 / 0.06e-3  # mu m^-1
+COHERENCE_LENGTH = 1 / FERMI_MOMENTUM * FERMI_ENERGY / FINITET_GAP  # mu m
 
 # NV Parameters
 NV_FREQUENCY   = 1e-1  # kelvin
 
-# Colors
-color = np.roll(["#746198", "#4781a7", "#589a5d", "#b3af38", "#b27d58", "#a75051"], 1)
-mpl.rcParams['axes.prop_cycle'] = cycler.cycler('color', color)
-
-# Calculations
-COHERENCE_LENGTH = 1 / FERMI_MOMENTUM * FERMI_ENERGY / FINITET_GAP  # mu m
+# Define momentum range
 MAX_LENGTH_SCALE = 1 / FERMI_MOMENTUM * FERMI_ENERGY / NV_FREQUENCY  # mu m
 Q_MAX = FERMI_MOMENTUM * 2
 Q_MIN = 1 / MAX_LENGTH_SCALE / 2 / 100
@@ -71,7 +71,6 @@ def read_csv(filename):
 
 # Read data from CSV
 data = read_csv(HOME_FOLDER+'/Results/height_dependence.csv')
-print(data)
 
 PLOT_HS_V_Q = False
 if PLOT_HS_V_Q:
@@ -100,29 +99,18 @@ tick_labels = {
     "$10^{-4}$": 1/10000
 }
 for label, x_values, y_values in data[4:]:
-    plt.plot(x_values[:-10], y_values[:-10], label=label)
-    NV_FREQUENCY = tick_labels[label]
-    qmin_kc = np.sqrt(10*NV_FREQUENCY * FINITET_GAP / (2*FERMI_ENERGY**2 ))* FERMI_MOMENTUM
-    d = 1 / qmin_kc
-    print(label)
-    print(np.log10(d))
-    print(d)
-    print(1/FERMI_MOMENTUM*NV_FREQUENCY/FINITET_GAP)
-    print(1/(FERMI_MOMENTUM*NV_FREQUENCY/FERMI_ENERGY))
-    #plt.axvline(x=0.231*hbar_omega*Ef/gap*np.pi, color='green', linestyle='--')
-    plt.axvline(x=2*FERMI_ENERGY*FERMI_ENERGY/FINITET_GAP/FINITET_GAP*NV_FREQUENCY/FERMI_MOMENTUM,
-                color='green', linestyle='--')
-
-plt.axhline(y=1, color='black', linestyle='--')
+    if label != "$10^{-4}$":
+        plt.plot(x_values[:-10], y_values[:-10], label=label)
+        NV_FREQUENCY = tick_labels[label]
+        qmin_kc = np.sqrt(10*NV_FREQUENCY * FINITET_GAP / (2*FERMI_ENERGY**2 ))* FERMI_MOMENTUM
+        d = 1 / qmin_kc
+        print(label)
 
 plt.xlim(3e-4,1e4)
 plt.xscale('log')
 plt.legend()
-plt.axvline(x=0.231, color='black', linestyle='--')
-#plt.axvline(x=lc, color='b', linestyle='--')
-#plt.axvline(x= lmax, color='black', linestyle='--')
-#plt.axvline(x=np.sqrt(lc) / np.sqrt(kf), color='g', linestyle='--')
-#plt.axvline(x=1 / kf, color='r', linestyle='--')
+#plt.axvline(x=0.231, color='black', linestyle='--')
+plt.axvline(x=COHERENCE_LENGTH, color='black', linestyle='--')
 plt.grid(True, which="both", ls="--")
 plt.xlabel(r'$d$ ($\mu m$)')
 plt.ylabel(r'$R_{1}$')
