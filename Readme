@@ -3,6 +3,6 @@ Few important scripts:
 2) Library for noise functions
 3) Scripts to calculate relaxation rates
 4) Plots for figures:
-    - Figure 1: R_1 v.s. temperature: T1_enhancement_vs_T_abs.py and plot_t1_enhancement.py 
-    - Figure 3: R_J v.s. temperature and frequency
+    - Figure 1: R_1 v.s. temperature  
+    - Figure 3: R_J v.s. temperature and frequency 
     - Figure 4: R_1 v.s. height
