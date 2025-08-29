@@ -59,7 +59,7 @@ def gap(var_nv, temp, debey_energy):
         return 0.000000
 
 CRITICAL_TEMP = 9
-DEBYE_TEMP = 200.0  # in Kelvin 
+DEBYE_TEMP = 200.0  # in Kelvin
 NV = -1/np.log(CRITICAL_TEMP/1.13/DEBYE_TEMP) # "density of staes times interaction strength"
 print(f"NV:{NV}")
 print(f"TC={1.13*DEBYE_TEMP*np.exp(-1/NV)}")
@@ -103,8 +103,9 @@ plt.show()
 DATA_FILE = HOME_FOLDER+'/Gap_data_n_generation/self_consistent_gap.csv'
 
 # Save data to CSV
-if False:
-    with open(DATA_FILE, 'w', newline='') as file:
+SAVE_DATA = False
+if SAVE_DATA:
+    with open(DATA_FILE, 'w', newline='',encoding='utf8') as file:
         writer = csv.writer(file)
         for T, g in zip(temperature, gap_values):
             writer.writerow([T, g])
