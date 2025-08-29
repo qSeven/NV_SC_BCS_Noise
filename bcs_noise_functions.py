@@ -74,7 +74,7 @@ def coherence_factor(k_tilde, kmq_tilde, gap, Ef):
 
     return (uk*ukmq+vk*vkmq)**2
 
-def bcs_transition_density(Ek, hbar_omega, beta):
+def qp_density_factor(Ek, hbar_omega, beta):
     """Density factor for transitions between quasi-particle states."""
     return nf(Ek, beta) * (1 - nf(Ek + hbar_omega, beta)) + \
            (1 - nf(Ek, beta)) * nf(Ek + hbar_omega, beta)
@@ -104,7 +104,7 @@ def current_r1_enhancement_integrand(Ek, q_tilde, hbar_omega, gap, kbT, Ef):
             DOSAvfq = density_of_scattering_angles(k_tilde, cos_theta_kmq, Ekmq, gap)
             cf = coherence_factor(k_tilde, kmq_tilde, gap, Ef)
             if cos_theta_kmq <= 1:
-                result += DOSAvfq*Ek/np.sqrt(Ek**2-gap**2)*cf*bcs_transition_density(Ek, hbar_omega, 1/kbT)
+                result += DOSAvfq*Ek/np.sqrt(Ek**2-gap**2)*cf*qp_density_factor(Ek, hbar_omega, 1/kbT)
     return result 
 
 def current_noise_enhancement(q_tilde, hbar_omega, gap, kbT, Ef):
