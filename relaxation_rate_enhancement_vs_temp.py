@@ -15,11 +15,11 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 
-from bcs_noise_functions import current_noise_enhancement, rate_enhancement
+from bcs_noise_functions import current_noise_enhancement, rate_enhancement, coherence_length
 
 # SC film Parameters for fixed gap
-FERMI_ENERGY  = 20e4 # kelvin
-FERMI_WAVEVECTOR = 1/3.65e-5 # mu m^-1
+FERMI_ENERGY  = 60e3 # kelvin
+FERMI_WAVEVECTOR = 30000 # mu m^-1
 
 # NV Parameters
 NV_FREQUENCY_K = 1e-1 # kelvin
@@ -47,7 +47,7 @@ if ENABLE_VARIABLE_LC:
                           f'{COHERENCE_LENGTH:.3f}um.csv')
     RT1_FIG = HOME_FOLDER+'/Results/'+TRIAL_NAME+'.png'
 else:
-    COHERENCE_LENGTH = 1/FERMI_WAVEVECTOR*FERMI_ENERGY/ZERO_T_GAP #mu m
+    COHERENCE_LENGTH = coherence_length(FERMI_WAVEVECTOR, FERMI_ENERGY, ZERO_T_GAP) # mu m
     MAX_LENGTH_SCALE =  1/FERMI_WAVEVECTOR *FERMI_ENERGY/NV_FREQUENCY_K #mu m
     J_ENHANCEMENT_FILE = HOME_FOLDER+'/Results/J_enhancement_'+TRIAL_NAME+'.csv'
     T1_ENHANCEMENT_FILE = HOME_FOLDER+'/Results/T1_enhancement_' + TRIAL_NAME +'.csv'
@@ -76,16 +76,12 @@ if CONVERT_TO_KELVIN:
 else:
     gap_K = gap_read
 
-print("Temperature:", temperature)
-print("Gap (read):", gap_read)
-print("Gap (K):", gap_K)
-
 # Calculate T1 enhancement vs temperature
 T1_enhancement_vs_T = []
 J_enhancement_vs_T = []
 for gap, kbT in zip (gap_K, temperature):
     if gap>0:
-        COHERENCE_LENGTH = 1/FERMI_WAVEVECTOR*FERMI_ENERGY/gap #mu m
+        COHERENCE_LENGTH = coherence_length(FERMI_WAVEVECTOR, FERMI_ENERGY, gap) # mu m
         print(f"Coherence length (lc): {COHERENCE_LENGTH} μm")
     else:
         print(gap==0)

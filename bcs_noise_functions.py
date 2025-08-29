@@ -135,3 +135,7 @@ def rate_enhancement(d, qs, RJs):
         The enhancement factor of the relaxation rate relative to a normal metal.
     """
     return 2*d*np.trapz( RJs*np.exp(-2*d*qs), qs)
+
+def coherence_length(fermi_momentum, fermi_energy, gap):
+    """Calculate coherence length."""
+    return 2/np.pi*fermi_energy/fermi_momentum/gap
