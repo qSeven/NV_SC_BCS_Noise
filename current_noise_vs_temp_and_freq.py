@@ -12,21 +12,22 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 
-from bcs_noise_functions import current_noise_enhancement
+from bcs_noise_functions import current_noise_enhancement, coherence_length
 
 # Parameters for fixed gap
 ZERO_T_GAP = 16.0 # K
-FERMI_ENERGY  = 20e4 # kelvin
+FERMI_ENERGY  = 60e3 # kelvin
+FERMI_WAVEVECTOR = 30000 # mu m^-1
 TEMPERATURE = 7.7 # kelvin
 #hbar_omega = 1e-1 # kelvin
-FERMI_WAVEVECTOR = 1/3.65e-5 # mu m^-1
 HEIGHT = 0.1 #mu meter
 
 
 FIXED_WAVEVECTOR_Q=1e2
 
 # Save and load files
-HOME_FOLDER = '/Users/shanekelly/Documents/Academic/Projects/Superconducting Experiment /NV_SC_BCS_Noise'
+HOME_FOLDER = ('/Users/shanekelly/Documents/Academic/Projects/Superconducting Experiment /'
+               'NV_SC_BCS_Noise')
 
 TRIAL_NAME = 'self_consistent' 
 GAP_FILE = HOME_FOLDER + '/Gap Data/' + 'self_consistent_gap.csv'
@@ -35,7 +36,7 @@ CURRENT_NOISE_FILE = HOME_FOLDER+'/Results/RJ_vs_omega_and_temp_'+TRIAL_NAME+'.c
 TEMP_FIG = HOME_FOLDER+'/Results/RJ_vs_omega_and_temp_'+TRIAL_NAME+'.png'
 
 # Print lengths
-COHERENCE_LENGTH = 1/FERMI_WAVEVECTOR*FERMI_ENERGY/ZERO_T_GAP #mu m
+COHERENCE_LENGTH = coherence_length(FERMI_WAVEVECTOR, FERMI_ENERGY, ZERO_T_GAP) #mu m
 print(f"Coherence length (lc): {COHERENCE_LENGTH} μm")
 
 # read gap:
@@ -66,9 +67,10 @@ for hbar_omega_over_T_c in [0.0001,0.001,0.01,0.1]:
             print(gap==0)
 
         NORMALIZED_WAVEVECTOR_Q = FIXED_WAVEVECTOR_Q/FERMI_WAVEVECTOR # q_tilde
-        J_enhancement_vs_T.append(current_noise_enhancement(NORMALIZED_WAVEVECTOR_Q, NV_FREQUENCY, gap, TEMPERATURE, FERMI_ENERGY))
+        J_enhancement_vs_T.append(current_noise_enhancement(NORMALIZED_WAVEVECTOR_Q, NV_FREQUENCY,
+                                                            gap, TEMPERATURE, FERMI_ENERGY))
     J_enhancement_vs_omega.append(J_enhancement_vs_T)
-    
+
 with open(CURRENT_NOISE_FILE, 'w', newline='', encoding='utf8') as file:
     writer = csv.writer(file)
     writer.writerow(["Temperature (K)"] + temperature)

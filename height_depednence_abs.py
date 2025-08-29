@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from bcs_noise_functions import current_noise_enhancement, rate_enhancement
 
 # SC parameters
-FERMI_ENERGY = 61700  # kelvin
-FERMI_WAVEVECTOR = 1 / 0.06e-3  # mu m^-1
+FERMI_ENERGY = 60000  # kelvin
+FERMI_WAVEVECTOR = 30000  # mu m^-1
 FINITE_T_GAP = 10  # kelvin
 TEMP = 7.7  # kelvin
 
@@ -30,8 +30,11 @@ data = []
 # Plotting Hebel-Slichter Factor vs q_tilde
 # Label is hbar_omega/gap
 plt.figure(figsize=(10, 6))
-for relative_frequency_factor, label in zip([10, 1, 0.1, 0.01], [r'$10^{-1}$', r'$10^{-2}$', r'$10^{-3}$', r'$10^{-4}$']):
-    HSfw = [current_noise_enhancement(q / FERMI_WAVEVECTOR, BASE_NV_FREQUENCY * relative_frequency_factor, FINITE_T_GAP, TEMP, FERMI_ENERGY) for q in qs]
+for relative_frequency_factor, label in zip([10, 1, 0.1, 0.01],
+                                             [r'$10^{-1}$', r'$10^{-2}$',
+                                               r'$10^{-3}$', r'$10^{-4}$']):
+    HSfw = [current_noise_enhancement(q / FERMI_WAVEVECTOR, BASE_NV_FREQUENCY * relative_frequency_factor,
+                                      FINITE_T_GAP, TEMP, FERMI_ENERGY) for q in qs]
     plt.plot(qs, HSfw, label=label)
     data.append((label, qs, HSfw))
 
@@ -48,9 +51,12 @@ plt.show()
 
 # Plotting T1^-1*d vs d
 plt.figure(figsize=(10, 6))
-for relative_frequency_factor, label in zip([10, 1, 0.1, 0.01], [r'$10^{-1}$', r'$10^{-2}$', r'$10^{-3}$', r'$10^{-4}$']):
-    HSfw = [current_noise_enhancement(q / FERMI_WAVEVECTOR,
-                                       BASE_NV_FREQUENCY * relative_frequency_factor, FINITE_T_GAP, TEMP, FERMI_ENERGY) for q in qs]
+for relative_frequency_factor, label in zip([10, 1, 0.1, 0.01],
+                                            [r'$10^{-1}$', r'$10^{-2}$',
+                                              r'$10^{-3}$', r'$10^{-4}$']):
+    HSfw = [current_noise_enhancement(q / FERMI_WAVEVECTOR, 
+                                      BASE_NV_FREQUENCY * relative_frequency_factor,
+                                      FINITE_T_GAP, TEMP, FERMI_ENERGY) for q in qs]
     Rew = [rate_enhancement(d, qs, HSfw) for d in 1 / qs]
     plt.plot(1 / qs, Rew, label=label)
     data.append((label, 1 / qs, Rew))

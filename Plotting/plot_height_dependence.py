@@ -4,6 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import cycler
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from bcs_noise_functions import coherence_length
 
 plt.rcParams.update({
     "text.usetex": True})
@@ -28,9 +32,9 @@ FIG_LOCATION = HOME_FOLDER+'/Results/height_dependence.pdf'
 
 # SC Parameters
 FINITET_GAP    = 11  # kelvin
-FERMI_ENERGY   = 61700  # kelvin
-FERMI_MOMENTUM = 1 / 0.06e-3  # mu m^-1
-COHERENCE_LENGTH = 1 / FERMI_MOMENTUM * FERMI_ENERGY / FINITET_GAP  # mu m
+FERMI_ENERGY   = 60000  # kelvin
+FERMI_MOMENTUM = 30000  # mu m^-1
+COHERENCE_LENGTH = coherence_length(FERMI_MOMENTUM, FERMI_ENERGY, FINITET_GAP)  # mu m
 
 # NV Parameters
 NV_FREQUENCY   = 1e-1  # kelvin

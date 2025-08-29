@@ -19,11 +19,11 @@ HOME_FOLDER = ('/Users/shanekelly/Documents/Academic/Projects/Superconducting Ex
 file_paths = [
     HOME_FOLDER + '/Results/T1_enhancement_self_consistent__lc_0.050um.csv',
     HOME_FOLDER + '/Results/T1_enhancement_self_consistent__lc_0.100um.csv',
-    HOME_FOLDER + '/Results/T1_enhancement_self_consistent__lc_0.500um.csv'
+    HOME_FOLDER + '/Results/T1_enhancement_self_consistent__lc_0.250um.csv'
 ]
 
 # Corresponding coherence lengths (lc) in micrometers
-coherence_lengths = ['50', '100', '500']
+coherence_lengths = ['50', '100', '250']
 
 # Initialize data storage
 temperature = []
