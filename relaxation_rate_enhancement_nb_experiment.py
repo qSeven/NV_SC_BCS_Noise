@@ -29,10 +29,10 @@ HEIGHT = 0.1 #mu meter
 HOME_FOLDER = ('/Users/shanekelly/Documents/Academic/Projects/Superconducting Experiment /'
                'NV_SC_BCS_Noise')
 
-TRIAL_NAME = 'self_consistent_'
-GAP_FILE = HOME_FOLDER + '/Gap Data/' + 'self_consistent_gap.csv'
-CONVERT_TO_KELVIN = False
-ZERO_T_GAP = 16.0 # K
+TRIAL_NAME = 'niobian_first_principles'
+GAP_FILE = HOME_FOLDER + '/Gap Data/' + 'Nb-gap-first-principles.csv'
+CONVERT_TO_KELVIN = True
+ZERO_T_GAP = 17.9 # K
 
 
 # Print lengths
@@ -44,7 +44,7 @@ if ENABLE_VARIABLE_LC:
     J_ENHANCEMENT_FILE = (HOME_FOLDER + f'/Results/J_enhancement_{TRIAL_NAME}_lc_'
                          f'{COHERENCE_LENGTH:.3f}um.csv')
     T1_ENHANCEMENT_FILE = (HOME_FOLDER + f'/Results/T1_enhancement_{TRIAL_NAME}_lc_'
-                          f'{COHERENCE_LENGTH:.3f}um.csv')
+                           f'{COHERENCE_LENGTH:.3f}um.csv')
     RT1_FIG = HOME_FOLDER+'/Results/'+TRIAL_NAME+'.png'
 else:
     COHERENCE_LENGTH = 1/FERMI_WAVEVECTOR*FERMI_ENERGY/ZERO_T_GAP #mu m
@@ -93,8 +93,8 @@ for gap, kbT in zip (gap_K, temperature):
     J_enhancement = []
     for q in qs:
         q_tilde = q/FERMI_WAVEVECTOR
-        J_enhancement.append(current_noise_enhancement(q_tilde, NV_FREQUENCY_K, gap,
-                                                       kbT, FERMI_ENERGY))
+        J_enhancement.append(current_noise_enhancement(q_tilde, NV_FREQUENCY_K,
+                                                       gap, kbT, FERMI_ENERGY))
     J_enhancement_vs_T.append(J_enhancement)
     RT1en = rate_enhancement(HEIGHT, qs, J_enhancement)
     T1_enhancement_vs_T.append(RT1en)
