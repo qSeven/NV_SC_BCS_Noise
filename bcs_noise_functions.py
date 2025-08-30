@@ -39,7 +39,9 @@ def nf(Ek, Beta):
     return 1 / (np.exp(Ek * Beta) + 1)
 
 def ukvks(k_tilde, kmq_tilde, gap, Ef):
-    """Calculate quasi-particle weights (u_k, u_{k-q}, v_k, v_{k-q})."""
+    """Calculate quasi-particle weights (u_k, u_{k-q}, v_k, v_{k-q}).
+    Defintion near eq. 39 in supplement (included in git repo)
+    """
     xi_k   = k_tilde**2*Ef-Ef
     xi_kmq = kmq_tilde**2*Ef-Ef
 
@@ -86,7 +88,9 @@ def kinetic_constraint(q_tilde, k_tilde, sq, Ek, hbar_omega, gap, Ef):
     return (cos_theta_kmq, kmq_tilde_sqrd)
 
 def density_of_scattering_angles(k_tilde, costheta_qk, Ekmq, gap):
-    """Density of scattering angles (DOSA)."""
+    """Density of scattering angles (DOSA).
+    Eq. 49 in supplement (included in git repo)
+    """
     if costheta_qk**2<1:
         DOSAvfq = Ekmq/np.sqrt(Ekmq**2-gap**2)/k_tilde*np.sqrt(1-costheta_qk**2)
     else:
@@ -94,10 +98,12 @@ def density_of_scattering_angles(k_tilde, costheta_qk, Ekmq, gap):
     return DOSAvfq
 
 def current_r1_enhancement_integrand(Ek, q_tilde, hbar_omega, gap, kbT, Ef):
-    """Integrand for current noise enhancement."""
+    """Integrand for current noise enhancement.
+    See Eq. 52 in supplement (included in git repo)
+    """
     result = 0
-    for sk in [-1,1]:
-        for sq in [-1,1]:
+    for sk in [-1,1]: # sign setting k_tilde above/below FS
+        for sq in [-1,1]: # sign in eq. 51 of supplement
             k_tilde = np.sqrt(1+sk/Ef*np.sqrt(Ek**2-gap**2))
             (cos_theta_kmq, kmq_tilde) = kinetic_constraint(q_tilde,k_tilde,sq, Ek, hbar_omega, gap, Ef)
             Ekmq = Ek+hbar_omega
@@ -115,6 +121,8 @@ def current_noise_enhancement(q_tilde, hbar_omega, gap, kbT, Ef):
 def rate_enhancement(d, qs, RJs):
     """
     Calculate the enhancement of the relaxation rate relative to a normal metal.
+
+    Eq. 53 in supplement (included in git repo)
 
     This function computes the enhancement factor of the relaxation rate for a nitrogen-vacancy (NV) center
     located at a distance `d` from a superconductor, based on the spectral density `RJs` and corresponding
