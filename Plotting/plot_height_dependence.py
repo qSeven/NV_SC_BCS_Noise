@@ -1,11 +1,13 @@
 """Figure 4 of main text."""
 import csv
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import cycler
 import sys
 import os
+
+import numpy as np
+import cycler
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from bcs_noise_functions import coherence_length
 
